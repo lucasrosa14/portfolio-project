@@ -470,6 +470,14 @@ QA além dos testes é sobre criar um ambiente onde qualidade é **valor, não o
   },
 ];
 
+export const getBlogPostsSortedByDateDesc = (): BlogPost[] => {
+  return [...blogPosts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+};
+
+export const getLatestBlogPosts = (limit = 6): BlogPost[] => {
+  return getBlogPostsSortedByDateDesc().slice(0, limit);
+};
+
 export const getPostBySlug = (slug: string): BlogPost | undefined => {
   return blogPosts.find((post) => post.slug === slug);
 };
