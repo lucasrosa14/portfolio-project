@@ -2,18 +2,37 @@ import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { Send, Mail, Linkedin, Github, MapPin } from "lucide-react";
 
+const CONTACT_EMAIL = "lucas.souza.rosa@email.com";
+const CONTACT_SUBJECT = "Contato via portfólio";
+
+type SubmitStatus = "idle" | "success" | "error";
+
 const Contact = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const [submitted, setSubmitted] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Placeholder - would integrate with backend
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
-    setFormData({ name: "", email: "", message: "" });
+
+    try {
+      const body = [
+        `Nome: ${formData.name}`,
+        `Email: ${formData.email}`,
+        "",
+        "Mensagem:",
+        formData.message,
+      ].join("\n");
+
+      const mailtoUrl = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(CONTACT_SUBJECT)}&body=${encodeURIComponent(body)}`;
+
+      window.location.href = mailtoUrl;
+      setSubmitStatus("success");
+      setFormData({ name: "", email: "", message: "" });
+    } catch {
+      setSubmitStatus("error");
+    }
   };
 
   return (
@@ -85,8 +104,14 @@ const Contact = () => {
               className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-primary text-primary-foreground font-semibold hover:brightness-110 transition-all duration-200"
             >
               <Send size={16} />
-              {submitted ? "Mensagem enviada!" : "Enviar Mensagem"}
+              Enviar Mensagem
             </button>
+            {submitStatus === "success" && (
+              <p className="text-sm text-emerald-400">Seu cliente de email foi aberto com a mensagem preenchida.</p>
+            )}
+            {submitStatus === "error" && (
+              <p className="text-sm text-red-400">Não foi possível abrir o cliente de email. Tente novamente.</p>
+            )}
           </motion.form>
 
           {/* Contact info */}
@@ -112,7 +137,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <p className="text-sm font-medium">Email</p>
-                  <p className="text-xs text-muted-foreground">lucas.souza.rosa@email.com</p>
+                  <p className="text-xs text-muted-foreground">{CONTACT_EMAIL}</p>
                 </div>
               </div>
             </div>
