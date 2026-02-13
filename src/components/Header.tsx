@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const navItems = [
   { label: "Sobre", href: "#sobre" },
@@ -31,20 +32,20 @@ const Header = () => {
       }`}
     >
       <div className="container mx-auto flex items-center justify-between h-16 px-4">
-        <a href="#" className="text-xl font-bold tracking-tight">
+        <Link to="/" className="text-xl font-bold tracking-tight">
           Lucas<span className="text-gradient">Rosa</span>
-        </a>
+        </Link>
 
         {/* Desktop */}
         <nav className="hidden md:flex items-center gap-8">
           {navItems.map((item) => (
-            <a
+            <Link
               key={item.href}
-              href={item.href}
+              to={`/${item.href}`}
               className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -69,14 +70,14 @@ const Header = () => {
           >
             <div className="flex flex-col gap-4 px-4 py-6">
               {navItems.map((item) => (
-                <a
+                <Link
                   key={item.href}
-                  href={item.href}
+                  to={`/${item.href}`}
                   onClick={() => setMobileOpen(false)}
                   className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
             </div>
           </motion.nav>

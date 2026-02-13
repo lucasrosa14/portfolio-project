@@ -1,7 +1,8 @@
+import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Clock, Calendar, Tag } from "lucide-react";
-import { getPostBySlug, blogPosts } from "@/data/blogPosts";
+import { getPostBySlug, getBlogPostsSortedByDateDesc } from "@/data/blogPosts";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ReactMarkdown from "react-markdown";
@@ -9,6 +10,10 @@ import ReactMarkdown from "react-markdown";
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const post = slug ? getPostBySlug(slug) : undefined;
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [slug]);
 
   if (!post) {
     return (
@@ -28,9 +33,10 @@ const BlogPost = () => {
     );
   }
 
-  const currentIndex = blogPosts.findIndex((p) => p.slug === slug);
-  const prevPost = currentIndex > 0 ? blogPosts[currentIndex - 1] : null;
-  const nextPost = currentIndex < blogPosts.length - 1 ? blogPosts[currentIndex + 1] : null;
+  const sortedPosts = getBlogPostsSortedByDateDesc();
+  const currentIndex = sortedPosts.findIndex((item) => item.slug === slug);
+  const prevPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
+  const nextPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
 
   return (
     <div className="min-h-screen bg-background text-foreground">

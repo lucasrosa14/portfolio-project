@@ -2,11 +2,12 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { BookOpen, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { blogPosts } from "@/data/blogPosts";
+import { getLatestBlogPosts } from "@/data/blogPosts";
 
 const Blog = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const latestPosts = getLatestBlogPosts(6);
 
   return (
     <section id="blog" className="section-padding relative" ref={ref}>
@@ -23,7 +24,7 @@ const Blog = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {blogPosts.map((post, i) => (
+          {latestPosts.map((post, i) => (
             <motion.article
               key={post.slug}
               initial={{ opacity: 0, y: 30 }}
